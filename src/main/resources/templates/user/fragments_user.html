@@ -1,0 +1,58 @@
+<!-- BODY section -->
+
+<!-- Header User Pages -->
+<div th:fragment="header-user">
+    <!-- Navigation -->
+    <nav class="navbar sb-topnav fixed-top navbar-expand navbar-dark bg-dark">  <!-- navbar-dark bg-dark --> 
+        
+        <!-- Navbar Brand -->
+        <a class="navbar-brand ps-3" href="/">WorkTime Register</a>
+
+        <!-- User icon & drop menu-->
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+            <li class="nav-link">
+                <span class="text-light" th:text="${session.user_name}">User</span>
+            </li>
+            <li class="nav-item dropdown">
+                
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="darkgrey" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                    </svg>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" th:href="@{/user/search}">Buscar</a></li>
+                    <li><a class="dropdown-item" href="#">Mensajes</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/settings}">Perfil</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>   
+</div>
+
+
+<!-- Footer -->
+<div th:fragment="footer">
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; WorkTime Register 2022</div>
+                <div>
+                    <a href="#">Privacy Policy</a>
+                    &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+
+<!-- Bootstrap JavaScript -->
+<div th:fragment="footer-scripts"></div>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+</div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/datatables/simple-datatables-style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Registros - Admin</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Registros</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="darkblue" class="mb-1">
+                                <path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0
+                                 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/>
+                            </svg>
+                            
+                            Total de Registros: <span th:text="${registry_list.size}"></span>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped table-hover" id="datatablesUser">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Entrada</th>
+                                        <th>Salida</th>
+                                        <th>Total</th>
+                                        <th>#Ref</th>
+                                        <th>Cerrado</th>
+                                        <th>Cerrar</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Entrada</th>
+                                        <th>Salida</th>
+                                        <th>Total</th>
+                                        <th>#Ref</th>
+                                        <th>Cerrado</th>
+                                        <th>Cerrar</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr th:each="rvar: ${registry_list}">
+                                        <td th:text="${rvar.date}"></td>
+                                        <td th:text="${rvar.user}"></td>
+                                        <td th:text="${rvar.timeIn}"></td>
+                                        <td th:text="${rvar.timeOut}"></td>
+                                        <td th:text="${rvar.timeTotal}"></td>
+                                        <td th:text="${rvar.id}"></td>
+                                        <td th:text="${rvar.isClosed} ? 'SI' : 'NO'"></td>
+                                        <td><a th:href="@{./reports(ref=${rvar.id})}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="orange" class="bi bi-shield-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1zm2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719
+                                                 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224z"/>
+                                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                                            </svg></a>
+                                        </td>
+                                    </tr>     
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

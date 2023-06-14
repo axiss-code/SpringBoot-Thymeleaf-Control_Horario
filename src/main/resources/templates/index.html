@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WorkTime Register</title>
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+    <section id="hero" class="d-flex align-items-center justify-content-center vh-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center ">
+                    <h1>WorkTime Register</h1>
+                    <h3>Registro de Jornada de trabajo.</h3>
+                    <div class="card-body mt-4">
+                        <form id="loginForm" autocomplete="on" th:action="@{/login}" method="post" style="max-width: 600px; margin: 0 auto;">
+                            <div class="col-md-4 input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#0d6efd" viewBox="-30 0 570 512">
+                                        <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3
+                                        19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+                                    </svg>
+                                    &nbsp;&nbsp;
+                                </span>
+                                <input type="email" class="form-control" id="username" name="username" placeholder="account@mail..." required>
+                            </div>
+                            <div class="col-md-4 input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#ffc107" viewBox="-110 0 640 512">
+                                       <path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7
+                                        17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9
+                                         5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/>
+                                    </svg>
+                                    &nbsp;&nbsp;
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="contraseña..." required>
+                            </div>
+                            <div class="mt-3 ms-4">
+                                Si eres un usuario registrado, accede con el email y la contraseña.<br>
+                                En otro caso contacta con el Administrador del sistema.
+                            </div>
+                            <div class="footer mt-2 ms-4">
+                                <button type="submit" class="btn btn-primary btn-block mb-3 align-baseline">Acceder</button>
+                                <span class="alert alert-warning ms-4 align-baseline" th:if="${error}" role="alert" th:text="${error}"></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 hero-img">
+                    <img src="/img/values-3.png" class="img-fluid" alt="Personas y un reloj">
+                </div>
+            </div>
+        </div>
+  </section>
+</body>
+</html>

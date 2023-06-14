@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Ver Usuario - Admin</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Usuario</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+
+                    <!-- ****** User Profile ****** -->
+                    <div class="container-fluid mb-2 row">
+                        <div class="card mb-1 p-4">
+                        <form id="update" autocomplete="off" th:action="@{./update}" th:object="${view_user}" method="post">
+                            <div class="row mb-2">
+                                <label for="id" class="col-sm-2 col-form-label">ID</label>
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="id" name="id" th:field="*{id}">
+                                    <span type="text" class="form-control text-secondary bg-secondary bg-opacity-10" th:text="*{id}">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="name" class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="name" name="name" th:field="*{name}">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" id="email" name="email" th:field="*{email}">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="password" name="password" th:field="*{password}" placeholder="····" >
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="role" class="col-sm-2 col-form-label">Rol</label>
+                                <div class="col-sm-10">
+                                <select class="form-control" id="role" name="role">
+                                    <option th:each="option:${roles}" th:value="${option.key}" th:text="${option.value}" th:selected="${view_user.role}==${option.value}" ></option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="created" class="col-sm-2 col-form-label">Fecha creación</label>
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="created" name="created" th:field="*{created}">
+                                    <span type="text" class="form-control text-secondary bg-secondary bg-opacity-10" th:text="*{created}">
+                                </div>
+                            </div>
+                            <fieldset class="row mb-2">
+                                <legend class="col-form-label col-sm-2 pt-0">Activo</legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="isActive" id="activeTrue" value="TRUE" th:attr="checked=*{isActive}?TRUE:FALSE">
+                                        <label class="form-check-label" for="active">
+                                            Cuenta activa
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="isActive" id="activeFalse" value="FALSE" th:attr="checked=*{isActive}?FALSE:TRUE">
+                                        <label class="form-check-label" for="active">
+                                            Desactivada
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="submit" class="btn btn-danger ms-3" th:formaction="@{./delete}">Eliminar</button>
+                            <span class="alert alert-success ms-3" role="alert" th:text="${success}" th:if="${success}"></span>
+                            <span class ="alert alert-danger ms-3" th:if="${error}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="crimson" viewBox="0 1 16 16" role="img" aria-label="Warning:">
+                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8
+                                    5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                <span role="alert" th:text="${error}"></span>
+                            </span>
+                        </form>
+                        
+                        </div>
+                    </div>        
+                </div>
+            </main>
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

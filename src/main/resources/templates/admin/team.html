@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Asociar Area - Admin</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Asociar Areas</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+
+                    <!-- ****** User Profile ****** -->
+                    <div class="container-fluid mb-2 row">
+                        <div class="card mb-1 p-4" th:with="usr=${user_selected}">
+                            <div class="row mb-2 col-auto">
+                                <label for="name" class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-4">
+                                    <span type="text" class="form-control text-secondary bg-secondary bg-opacity-10" th:text="${usr.name}"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="created" class="col-sm-2 col-form-label">Fecha creación</label>
+                                <div class="col-sm-4">
+                                    <span type="text" class="form-control text-secondary bg-secondary bg-opacity-10" th:text="${usr.created}">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="user_areas" class="col-sm-2 col-form-label">Areas Asociadas</label>
+                                <div class="col-sm-4">
+                                    <span type="text" class="form-control text-secondary bg-secondary bg-opacity-10" th:text="${user_areas}">
+                                </div>
+                            </div>
+                            <form id="update" th:action="@{./loadArea}" th:object="${area_upd}" method="post">  
+                                <div class="row mb-2">
+                                    <label for="role" class="col-sm-2 col-form-label">Asociar/Quitar</label>
+                                    <div class="col-sm-4 mb-2">
+                                        <select class="form-select" id="area" name="area">
+                                            <option th:each="option:${areas}" th:value="${option.id}" th:text="${option.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Asociar</button>
+                                <button type="submit" class="btn btn-danger ms-3" th:formaction="@{./unloadArea}">Quitar</button>
+                                <span class="alert-success ms-3 p-2" role="alert" th:text="${success}" th:if="${success}"></span>
+                                <span class="alert-danger ms-3 p-2" role="alert" th:text="${error}" th:if="${error}"></span>
+                            </form>
+                        </div>
+                    </div>        
+                </div>
+            </main>
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

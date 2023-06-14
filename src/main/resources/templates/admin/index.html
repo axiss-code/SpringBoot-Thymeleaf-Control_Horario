@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/datatables/simple-datatables-style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Admin Dashboard</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Dashboard</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${success}">
+                        <span role="alert" th:text="${success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${error}">
+                        <span role="alert" th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-primary text-white mb-4">
+                                <div class="card-body">
+                                    Administrador<br>
+                                    Editor<br>
+                                    Usuario<br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body">
+                                    Conectados<br>
+                                    Desconectados<br>
+                                    Inactivos<br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-warning text-white mb-4">
+                                <div class="card-body mb-2">Areas</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" th:href="@{/admin/area}">Ver Areas</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-danger text-white mb-4">
+                                <div class="card-body mb-2">Mensajes</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="#">Ver Mensajes</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ****** [DataTables] Ultimos 15 Registrados ****** -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table mb-1" viewBox="0 0 16 16">
+                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0
+                                 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"></path>
+                            </svg>
+                            &nbsp;Últimos <span th:text="${users.size}"></span> usuarios
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover" id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Activo</th>
+                                        <th>Creado</th>
+                                        <th>Editar</th>
+                                        <th>Area</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Activo</th>
+                                        <th>Creado</th>
+                                        <th>Editar</th>
+                                        <th>Area</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr th:each="user_var: ${users}">
+                                        <td th:text="${user_var.name}"></td>
+                                        <td th:text="${user_var.email}"></td>
+                                        <td th:text="${user_var.role}"></td>
+                                        <td th:text="${user_var.isActive} ? 'SI' : 'NO'"></td>
+                                        <td th:text="${user_var.created}"></td>
+                                        <td><a th:href="@{admin/view(email=${user_var.email})}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="#20c997" viewBox="0 0 640 512">
+                                                <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0
+                                                 498.7 13.3 512 29.7 512H322.8c-3.1-8.8-3.7-18.4-1.4-27.8l15-60.1c2.8-11.3
+                                                 8.6-21.5 16.8-29.7l40.3-40.3c-32.1-31-75.7-50.1-123.9-50.1H178.3zm435.5-68.3c-15.6-15.6-40.9-15.6-56.6
+                                                  0l-29.4 29.4 71 71 29.4-29.4c15.6-15.6 15.6-40.9 0-56.6l-14.4-14.4zM375.9 417c-4.1 4.1-7
+                                                   9.2-8.4 14.9l-15 60.1c-1.4 5.5 .2 11.2 4.2 15.2s9.7 5.6 15.2 4.2l60.1-15c5.6-1.4 10.8-4.3
+                                                    14.9-8.4L576.1 358.7l-71-71L375.9 417z"/>
+                                            </svg></a>
+                                        </td>
+                                        <td><a th:href="@{admin/team(userid=${user_var.id})}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="#f5ceb3" class="sb-nav-link-icon" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5
+                                                 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zm-6 8A1.5 1.5 0 0 1 1.5
+                                                 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5
+                                                 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5
+                                                 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1z"/>
+                                            </svg></a>
+                                        </td>
+                                    </tr>     
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

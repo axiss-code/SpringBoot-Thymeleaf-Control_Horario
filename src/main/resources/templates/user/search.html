@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/vendor/datatables/simple-datatables-style.css}">
+    <link rel="stylesheet" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Buscar Registros - Usuario</title>
+</head>
+
+<body>
+    <!-- <<< Header >>> -->
+	<div th:include="user/fragments_user :: header-user"></div>
+
+    <!-- ****** Main Content ****** -->
+    <div>
+        <main class="mt-4">
+            <div class="container-fluid px-4">
+                <br>
+                <h1 class="mt-3">Buscar</h1>
+                <!-- ****** Breadcrumbs ****** -->
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                    <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                        <li class="breadcrumb-item">
+                            <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                            <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                    </ol>
+                </nav>
+
+                <!-- ****** Búsqueda ******  -->
+                <form th:action="@{./search}" method="post" th:object="${registry}">
+                    <div>
+                        <label for="registry-date">Fecha - Jornada:</label>
+                        <input th:if="${registry}" type="date" th:field="*{date}" id="date" th:value="*{date}" class="date align-middle"/>
+                        <input th:unless="${registry}" type="date" th:field="*{date}" id="date" class="date align-middle"/>
+                        <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+                        <span class="ms-2" th:if="${registry_sum}" th:text="'Total Jornada:'"></span>
+                        <strong><span class="ms-2" th:if="${registry_sum}" th:text="${registry_sum}"></span></strong>
+                        <span class="alert alert-success ms-3" role="alert" th:text="${success}" th:if="${success}"></span>
+                        <span class="alert alert-danger ms-3" role="alert" th:text="${error}" th:if="${error}"></span>
+                    </div>
+                </form>
+
+                <!-- ****** Tabla Resultados de búsqueda ******  -->
+                <div th:if="registry_list" class="card-body">
+                    <table class="table table-striped table-hover table-bordered  text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Tiempo</th>
+                                <th>Cerrada</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Tiempo</th>
+                                <th>Cerrada</th>
+                                <th>Editar</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr th:if="${registry_list}" th:unless="${registry_list.size}!=0">
+                                <td colspan="7" class="text-center">Sin datos para la fecha seleccionada</td>
+                            </tr>
+                            <tr th:each="rvar: ${registry_list}" href="/">
+                                <td th:text="${rvar.id}"></td>
+                                <td th:text="${rvar.date}"></td>
+                                <td th:text="${rvar.timeIn}"></td>
+                                <td th:text="${rvar.timeOut}"></td>
+                                <td th:text="${rvar.timeTotal}"></td>
+                                <td th:text="${rvar.isClosed} ? 'SI' : 'NO'"></td>
+                                <td><a th:href="@{./view(idx=${rvar.id})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="orange" viewBox="0 0 640 512">
+                                        <path d="M224 0a128 128 0 1 1 0 256A128 128 0 1 1 224 0zM178.3 304h91.4c20.6 0 40.4 3.5 58.8 9.9C323
+                                         331 320 349.1 320 368c0 59.5 29.5 112.1 74.8 144H29.7C13.3 512 0 498.7 0 482.3C0 383.8 79.8 304 178.3
+                                         304zM352 368a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-80c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16
+                                         16h48c8.8 0 16-7.2 16-16s-7.2-16-16-16H512V304c0-8.8-7.2-16-16-16z"/>
+                                    </svg></a>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </main>
+        <!-- Footer -->
+        <div th:include="user/fragments_user :: footer"></div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

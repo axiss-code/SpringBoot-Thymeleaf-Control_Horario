@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Crear Usuario - Admin</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Crear Usuario</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+
+                    <div class="container-fluid mb-2 row">
+                        <div>
+                        <form id="save" autocomplete="on" th:action="@{./create}" th:object="${user}" method="post">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#198754" viewBox="-50 0 570 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 
+                                        512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="nombre..." required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#0d6efd" viewBox="-30 0 570 512">
+                                        <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3
+                                        19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+                                    </svg>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="account@mail..." required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#ffc107" viewBox="-110 0 640 512">
+                                       <path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7
+                                        17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9
+                                         5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/>
+                                    </svg>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="contraseña..." required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#fd7e14" viewBox="0 0 640 512">
+                                        <path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7
+                                        222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 
+                                        288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 
+                                        183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 
+                                        56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 
+                                        304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 
+                                        101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z"/>
+                                    </svg>
+                                </span>
+                                <select class="form-select" id="role" name="role">
+                                    <option th:each="option : ${roles}" th:value="${option.key}" th:text="${option.value}" th:selected="${option.value=='USER'}"></option>
+                                </select>
+                            </div>
+                            <div class="footer">
+                                <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                                <span class="alert-danger ms-3 p-2" role="alert" th:text="${error}" th:if="${error}"></span>
+                            </div>
+                        </form>
+                        </div>
+                    </div>        
+                    
+                </div>
+            </main>
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>

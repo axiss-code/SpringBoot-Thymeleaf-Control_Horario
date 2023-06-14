@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/datatables/simple-datatables-style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/dashboard/styles.css}">
+    <title>Areas - Admin</title>
+</head>
+
+<body class="sb-nav-fixed">
+    <!-- <<< Header >>> -->
+	<div th:include="admin/fragments_admin :: header-admin"></div>
+
+    <div id="layoutSidenav">
+
+        <!-- <<< Side Left Menu >>> -->
+	    <div th:include="admin/fragments_admin :: left-menu-admin"></div>
+
+        <!-- ****** Main Content ****** -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Areas</h1>
+                    
+                    <!-- ****** Breadcrumbs ****** -->
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"> 
+                        <ol class="breadcrumb mb-4" th:with="bc1=${breadcrumbs.get(#httpServletRequest.requestURI)}, bc2 = ${#strings.arraySplit(#strings.substring({bc1},1,{bc1.length+1}),'+')}">
+                            <li class="breadcrumb-item">
+                                <a th:if="${bc2.length > 2}" th:href="@{${bc2[0]}}" th:text="${bc2[1]}">Text 1</a>
+                                <a th:unless="${bc2.length > 2}" th:text="${bc2[1]}">Text 1</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:if="${bc2.length > 2}" th:text="${bc2[3]}">Text 2</li>
+                        </ol>
+                    </nav>
+
+                    <div>
+                        <form class="mb-2" id="area" method="post" th:object="${area_obj}" th:action="@{/admin/add}">
+                            <div class="row ms-1 mb-3">
+                                <a onclick="javascript:toggleHide();" class="btn btn-primary col-auto">Nueva</a>
+                                <div class="row col-auto ms-1" id="toshow" style="display: none;">
+                                    <input type="text" class="col-auto" id="name" name="name" placeholder="Nombre del área...">
+                                    <button type="submit" class="btn btn-warning col-auto ms-2" onclick="javascript:toggleHide();">Crear</button>
+                                </div>
+                                <span class="align-middle alert-success p-2 ms-2 rounded-3 col-auto" role="alert" th:text="${success}" th:if="${success}"></span>
+                                <span class="align-middle alert-danger p-2 ms-2 rounded-3 col-auto" role="alert" th:text="${error}" th:if="${error}"></span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- ****** [DataTables] Areas ****** -->
+                    <div class="card mb-4" style="max-width: 50rem;">
+                        <div class="card-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="darkblue" class="mb-1">
+                                <path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0
+                                 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/>
+                            </svg>
+                            Existen <span th:text="${areas.size}"></span> areas.
+                        </div>
+                        <div class="card-body h-100">
+                            <table class="table table-hover" id="datatablesArea">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Editar</th>
+                                        <th>Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Editar</th>
+                                        <th>Borrar</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr th:each="area : ${areas}">
+                                        <td th:text="${area.name}">
+                                        </td>
+                                        <td><!-- Edit button -->
+                                            <a href="" data-bs-toggle="modal" th:data-bs-target="'#staticEdit' + ${area.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="#008b8b" viewBox="0 0 16 16">
+                                                <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 
+                                                0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 
+                                                0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
+                                            </svg></a>
+                                            <!-- Modal -->
+                                            <div class="modal fade" th:id="'staticEdit' + ${area.id}" tabindex="-1" th:aria-labelledby="'staticEdit' + ${area.id} +'Label'" aria-hidden="true">
+                                                <form method="post" th:object="${area_obj}" th:action="@{./edit}">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" th:id="'staticEdit'+${area.id}+'Label'">Editar Nombre</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body input-group">
+                                                            <span class="input-group-text">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#198754" viewBox="0 0 16 16">
+                                                                    <path d="M12.258 3h-8.51l-.083 2.46h.479c.26-1.544.758-1.783 2.693-1.845l.424-.013v7.827c0 
+                                                                    .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.431.013c1.934.062 2.434.301 2.693 1.846h.479L12.258 3z"/>
+                                                                </svg>
+                                                            </span>
+                                                            <input type="text" class="form-control" id="name" name="name" th:placeholder="${area.name}" th:field="*{name}">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" id="id" name="id" th:value="${area.id}">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-success">Editar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </td>
+
+                                        <td><!-- Remove button -->
+                                            <form method="post" th:object="${area_obj}" th:action="@{./remove}">
+                                            <a href="" data-bs-toggle="modal" th:data-bs-target="'#staticRemove' + ${area.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="red" viewBox="0 0 16 16">
+                                                <path d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0
+                                                1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708z"/>
+                                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0
+                                                1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                                            </svg></a>
+                                            <!-- Modal -->
+                                            <div class="modal fade" th:id="'staticRemove' + ${area.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" th:aria-labelledby="'staticRemove' + ${area.id} +'Label'" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" th:id="'staticRemove'+${area.id}+'Label'">Borrar Area</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <span class="m-3" th:text="'&#9888; Seguro que desea eliminar el Area '+${area.name}+'?'"></span>
+                                                        <div class="modal-footer">
+                                                            <input type="hidden" id="id" name="id" th:value="${area.id}">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" name="submit" class="btn btn-danger">Borrar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- Footer -->
+            <div th:include="admin/fragments_admin :: footer"></div>
+        </div>
+    </div>
+    <script>
+        function toggleHide() {
+            let toggle = document.getElementById('toshow');
+            toggle.style.display=='none' ? toggle.style.display='inline' : toggle.style.display='none';
+        }
+
+        const myModal = document.getElementById('myModal');
+        const myInput = document.getElementById('myInput');
+
+        myModal.addEventListener('shown.bs.modal', () => {
+            myInput.focus()
+        });
+    </script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/dashboard/scripts.js"></script>
+    <script src="/vendor/datatables/simple-datatables-latest.js"></script>
+    <script src="/vendor/datatables/simple-datatables-load.js"></script>
+</body>
+
+</html>
